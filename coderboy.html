@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating hearts background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 182, 193, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.3) 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255, 182, 193, 0.2) 1px, transparent 1px);
+      background-size: 50px 50px, 30px 30px, 40px 40px;
+      animation: float 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .container {
+      text-align: center;
+      z-index: 10;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    /* Gift Container */
+    .gift-container {
+      margin: 30px 0;
+    }
+
+    .gift-box {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+      cursor: pointer;
+      transition: all 0.8s ease;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4em;
+      box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gift-box::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120%;
+      height: 2px;
+      background: #fff;
+      transform: translate(-50%, -50%);
+    }
+
+    .gift-box::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 120%;
+      background: #fff;
+      transform: translate(-50%, -50%);
+    }
+
+    .gift-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 20, 147, 0.6);
+    }
+
+    .gift-text {
+      color: #666;
+      font-style: italic;
+      margin-top: 15px;
+      font-size: 1.1em;
+    }
+
+    /* Character Image */
+    .character {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 30px;
+      display: block;
+      animation: bounce 2s ease-in-out infinite;
+      transition: all 0.5s ease;
+      border-radius: 15px;
+      object-fit: cover;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    /* Main Title */
+    .main-title {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #4a4a4a;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Message Box */
+    .message-box {
+      background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border: 3px solid #ff69b4;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .message-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,105,180,0.1), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .message-text {
+      color: white;
+      font-size: 1.3em;
+      font-weight: 500;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Emoji Row */
+    .emoji-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .emoji {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      user-select: none;
+    }
+
+    .emoji:hover {
+      transform: scale(1.1);
+      background: rgba(255, 105, 180, 0.3);
+    }
+
+    .emoji.active {
+      background: #ff69b4 !important;
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+      border: 2px solid white;
+      animation: pulse 0.6s ease-in-out;
+    }
+
+    .emoji.completed {
+      background: #4CAF50 !important;
+      border: 2px solid #45a049;
+      transform: scale(1.0);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1.2); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1.2); }
+    }
+
+    /* Button styling */
+    .next-button {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 16px;
+      border: none;
+      outline: none;
+      user-select: none;
+      margin-top: 15px;
+      display: inline-block;
+      position: relative;
+      z-index: 10;
+    }
+
+    .next-button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #e01b6e, #d11447);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+
+    .next-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Initially hide everything */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 2em;
+      }
+      
+      .message-text {
+        font-size: 1.1em;
+      }
+      
+      .character {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .gift-box {
+        width: 120px;
+        height: 120px;
+        font-size: 3em;
+      }
+
+      .emoji {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+
+      .next-button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+  </audio>
+
+  <div class="container">
+    <!-- Initial Gift Box -->
+    <div id="giftContainer" class="gift-container">
+      <div id="giftBox" class="gift-box">🎁</div>
+      <p class="gift-text">Open the gift, cutie :3</p>
+    </div>
+
+    <!-- Main Content (Hidden Initially) -->
+    <div id="mainContent" class="hidden">
+      <!-- Character Image -->
+      <img id="characterImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cdefs%3E%3CradialGradient id='face' cx='50%25' cy='45%25'%3E%3Cstop offset='0%25' stop-color='%23fff'/%3E%3Cstop offset='100%25' stop-color='%23f8f8f8'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='200' cy='200' r='160' fill='url(%23face)' stroke='%23333' stroke-width='4'/%3E%3Cellipse cx='160' cy='180' rx='15' ry='20' fill='%23333'/%3E%3Cellipse cx='240' cy='180' rx='15' ry='20' fill='%23333'/%3E%3Cpath d='M170 220 Q200 250 230 220' stroke='%23333' stroke-width='4' fill='none'/%3E%3Ccircle cx='140' cy='210' r='20' fill='%23ffb6c1'/%3E%3Ccircle cx='260' cy='210' r='20' fill='%23ffb6c1'/%3E%3Cellipse cx='200' cy='120' rx='60' ry='30' fill='%23333'/%3E%3Cellipse cx='180' cy='110' rx='15' ry='25' fill='%23333'/%3E%3Cellipse cx='220' cy='110' rx='15' ry='25' fill='%23333'/%3E%3C/svg%3E" alt="Cute Character" class="character">
+
+      <!-- Main Title -->
+      <h1 id="mainTitle" class="main-title">Happy Birthday, Beautiful!</h1>
+
+      <!-- Message Box -->
+      <div class="message-box" id="messageBox">
+        <div id="messageText" class="message-text">Click here to start your birthday surprise! 🎉</div>
+        
+        <!-- Emoji Progress Row -->
+        <div class="emoji-row">
+          <div class="emoji" data-level="0">🎂</div>
+          <div class="emoji" data-level="1">💖</div>
+          <div class="emoji" data-level="2">🥹</div>
+          <div class="emoji" data-level="3">🧸</div>
+          <div class="emoji" data-level="4">🫀</div>
+          <div class="emoji" data-level="5">💌</div>
+        </div>
+
+        <!-- Next Button -->
+        <button id="nextButton" class="next-button hidden">Next 💕</button>
+      </div>
+    </div>
+  </div>
+ 
+  <script>
+    let currentLevel = 0;
+    let isStarted = false;
+    const audio = document.getElementById('bgMusic');
+
+    // Messages for each level
+    const messages = [
+      "Do you know what makes today extra special? 🌟",
+      "It's because it's your special day, filled with joy! 🎊",
+      "May your day be as beautiful as you are, darling! 🌺",
+      "You bring so much happiness to everyone around you! ✨",
+      "Wishing you endless happiness and success! ❤️",
+      "Ready for your final surprise? 🎊"
+    ];
+
+    // GIF URLs - Replace these with your actual GIF URLs from GitHub
+    const gifUrls = [
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/bunga.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/emawh.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/milk-and-mocha.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/mochi-blue-roses.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/pandacoklat.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/weee.gif"
+    ];
+
+    // Elements
+    const giftBox = document.getElementById('giftBox');
+    const giftContainer = document.getElementById('giftContainer');
+    const mainContent = document.getElementById('mainContent');
+    const mainTitle = document.getElementById('mainTitle');
+    const messageText = document.getElementById('messageText');
+    const messageBox = document.getElementById('messageBox');
+    const nextButton = document.getElementById('nextButton');
+    const characterImg = document.getElementById('characterImg');
+    const emojis = document.querySelectorAll('.emoji');
+
+    // Gift box click handler
+    giftBox.addEventListener('click', async function() {
+      if (!isStarted) {
+        // Get user's name
+        const { value: name } = await Swal.fire({
+          title: "What's your beautiful name? 💕",
+          input: "text",
+          inputPlaceholder: "Enter your name...",
+          inputValidator: (value) => {
+            if (!value || value.trim().length === 0) {
+              return "Please enter your name!";
+            }
+            if (value.length > 15) {
+              return "Please enter a shorter name!";
+            }
+          },
+          allowOutsideClick: false,
+          showCancelButton: false,
+          background: '#2c2c2c',
+          color: '#fff',
+          confirmButtonColor: '#ff69b4',
+          confirmButtonText: 'Continue 💖'
+        });
+
+        if (name) {
+          // Try to play background music
+          try {
+            await audio.play();
+          } catch(e) {
+            console.log("Audio playback failed:", e);
+          }
+
+          // Update title with name
+          mainTitle.textContent = `Happy Birthday, ${name.trim()}! 🎉`;
+          
+          // Hide gift box and show main content with animation
+          giftContainer.style.cssText = "transition:all .8s ease;transform:scale(10);opacity:0";
+          
+          setTimeout(() => {
+            giftContainer.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            
+            // Set first emoji as active and show next button
+            emojis[0].classList.add('active');
+            nextButton.classList.remove('hidden');
+            
+            // Update message for first level
+            messageText.textContent = messages[0];
+            currentLevel = 0;
+          }, 800);
+          
+          isStarted = true;
+        }
+      }
+    });
+
+    // Message box click handler (for mobile users)
+    messageBox.addEventListener('click', function(e) {
+      // Don't trigger if clicking on emoji or button
+      if (e.target.classList.contains('emoji') || e.target.classList.contains('next-button')) return;
+      
+      if (isStarted && currentLevel < messages.length - 1) {
+        handleNextLevel();
+      } else if (currentLevel >= messages.length - 1) {
+        // Final redirect
+        redirectToFinalPage();
+      }
+    });
+
+    // Next button click handler
+    nextButton.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (isStarted && currentLevel < messages.length - 1) {
+        handleNextLevel();
+      } else if (currentLevel >= messages.length - 1) {
+        // Final redirect
+        redirectToFinalPage();
+      }
+    });
+
+    // Emoji click handlers
+    emojis.forEach((emoji, index) => {
+      emoji.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (isStarted && index === currentLevel) {
+          // Change character image to GIF
+          if (gifUrls[index]) {
+            characterImg.src = gifUrls[index];
+          }
+          
+          // Mark current emoji as completed
+          emoji.classList.remove('active');
+          emoji.classList.add('completed');
+          
+          // Small delay then proceed to next level
+          setTimeout(() => {
+            handleNextLevel();
+          }, 1000);
+        }
+      });
+    });
+
+    function handleNextLevel() {
+      if (currentLevel >= messages.length - 1) {
+        redirectToFinalPage();
+        return;
+      }
+
+      // Mark current emoji as completed if not already
+      if (emojis[currentLevel] && !emojis[currentLevel].classList.contains('completed')) {
+        emojis[currentLevel].classList.remove('active');
+        emojis[currentLevel].classList.add('completed');
+        
+        // Change to GIF if available
+        if (gifUrls[currentLevel]) {
+          characterImg.src = gifUrls[currentLevel];
+        }
+      }
+
+      currentLevel++;
+
+      // Update message
+      if (currentLevel < messages.length) {
+        messageText.textContent = messages[currentLevel];
+        
+        // Activate next emoji if exists
+        if (emojis[currentLevel]) {
+          emojis[currentLevel].classList.add('active');
+        }
+        
+        // Update button text for final level
+        if (currentLevel >= messages.length - 1) {
+          nextButton.textContent = "🎉 Open Final Surprise 🎉";
+        }
+      }
+
+      // Add animation to message box
+      messageBox.style.animation = 'pulse 0.6s ease-in-out';
+      setTimeout(() => {
+        messageBox.style.animation = '';
+      }, 600);
+    }
+
+    function redirectToFinalPage() {
+      Swal.fire({
+        title: 'Final Surprise! 🎊',
+        text: 'Get ready for something special...',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#2c2c2c',
+        color: '#fff'
+      }).then(() => {
+        window.location.href = "https://anubhavboyz.github.io/forpic/index.html";
+      });
+    }
+
+    // Preload images for better performance
+    function preloadImages() {
+      gifUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', function() {
+      preloadImages();
+    });
+  </script>
+</body>
+</html>
