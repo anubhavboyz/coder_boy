@@ -109,36 +109,22 @@
       font-size: 1.1em;
     }
 
-    /* Character Display - Using CSS animations instead of GIFs */
+    /* Character Image */
     .character {
       width: 200px;
       height: 200px;
       margin: 0 auto 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 6em;
+      display: block;
       animation: bounce 2s ease-in-out infinite;
       transition: all 0.5s ease;
       border-radius: 15px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .character.animate {
-      animation: bounce 1s ease-in-out infinite, spin 3s linear infinite;
+      object-fit: cover;
     }
 
     @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(0deg); }
-      40% { transform: translateY(-15px) rotate(5deg); }
-      60% { transform: translateY(-8px) rotate(-5deg); }
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
     }
 
     /* Main Title */
@@ -148,12 +134,6 @@
       color: #4a4a4a;
       margin-bottom: 30px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 2px 2px 4px rgba(0,0,0,0.1), 0 0 10px rgba(255,105,180,0.5); }
-      to { text-shadow: 2px 2px 4px rgba(0,0,0,0.1), 0 0 20px rgba(255,105,180,0.8), 0 0 30px rgba(255,105,180,0.6); }
     }
 
     /* Message Box */
@@ -231,14 +211,13 @@
       transform: scale(1.2);
       box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
       border: 2px solid white;
-      animation: pulse 0.6s ease-in-out infinite;
+      animation: pulse 0.6s ease-in-out;
     }
 
     .emoji.completed {
       background: #4CAF50 !important;
       border: 2px solid #45a049;
       transform: scale(1.0);
-      animation: none;
     }
 
     @keyframes pulse {
@@ -279,36 +258,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* Confetti Animation */
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #ff69b4;
-      animation: confetti-fall 3s linear infinite;
-    }
-
-    .confetti:nth-child(odd) {
-      background: #ff1493;
-      animation-delay: 0.5s;
-    }
-
-    .confetti:nth-child(3n) {
-      background: #ffb6c1;
-      animation-delay: 1s;
-    }
-
-    @keyframes confetti-fall {
-      0% {
-        transform: translateY(-100vh) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
     /* Initially hide everything */
     .hidden {
       display: none !important;
@@ -327,7 +276,6 @@
       .character {
         width: 150px;
         height: 150px;
-        font-size: 4em;
       }
       
       .gift-box {
@@ -350,6 +298,11 @@
   </style>
 </head>
 <body>
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+  </audio>
+
   <div class="container">
     <!-- Initial Gift Box -->
     <div id="giftContainer" class="gift-container">
@@ -359,8 +312,8 @@
 
     <!-- Main Content (Hidden Initially) -->
     <div id="mainContent" class="hidden">
-      <!-- Character Display -->
-      <div id="characterDisplay" class="character">🎂</div>
+      <!-- Character Image -->
+      <img id="characterImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cdefs%3E%3CradialGradient id='face' cx='50%25' cy='45%25'%3E%3Cstop offset='0%25' stop-color='%23fff'/%3E%3Cstop offset='100%25' stop-color='%23f8f8f8'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='200' cy='200' r='160' fill='url(%23face)' stroke='%23333' stroke-width='4'/%3E%3Cellipse cx='160' cy='180' rx='15' ry='20' fill='%23333'/%3E%3Cellipse cx='240' cy='180' rx='15' ry='20' fill='%23333'/%3E%3Cpath d='M170 220 Q200 250 230 220' stroke='%23333' stroke-width='4' fill='none'/%3E%3Ccircle cx='140' cy='210' r='20' fill='%23ffb6c1'/%3E%3Ccircle cx='260' cy='210' r='20' fill='%23ffb6c1'/%3E%3Cellipse cx='200' cy='120' rx='60' ry='30' fill='%23333'/%3E%3Cellipse cx='180' cy='110' rx='15' ry='25' fill='%23333'/%3E%3Cellipse cx='220' cy='110' rx='15' ry='25' fill='%23333'/%3E%3C/svg%3E" alt="Cute Character" class="character">
 
       <!-- Main Title -->
       <h1 id="mainTitle" class="main-title">Happy Birthday, Beautiful!</h1>
@@ -388,19 +341,27 @@
   <script>
     let currentLevel = 0;
     let isStarted = false;
+    const audio = document.getElementById('bgMusic');
 
     // Messages for each level
     const messages = [
       "Do you know what makes today extra special? 🌟",
-      "It's because it's your special day, filled with joy! 🎊", 
+      "It's because it's your special day, filled with joy! 🎊",
       "May your day be as beautiful as you are, darling! 🌺",
       "You bring so much happiness to everyone around you! ✨",
       "Wishing you endless happiness and success! ❤️",
       "Ready for your final surprise? 🎊"
     ];
 
-    // Animated emojis for each level
-    const levelEmojis = ["🎂", "💖", "🥹", "🧸", "🫀", "💌"];
+    // GIF URLs - Replace these with your actual GIF URLs from GitHub
+    const gifUrls = [
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/bunga.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/emawh.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/milk-and-mocha.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/mochi-blue-roses.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/pandacoklat.gif",
+      "https://raw.githubusercontent.com/anubhavboyz/hppybddyanshika/main/images/weee.gif"
+    ];
 
     // Elements
     const giftBox = document.getElementById('giftBox');
@@ -410,29 +371,13 @@
     const messageText = document.getElementById('messageText');
     const messageBox = document.getElementById('messageBox');
     const nextButton = document.getElementById('nextButton');
-    const characterDisplay = document.getElementById('characterDisplay');
+    const characterImg = document.getElementById('characterImg');
     const emojis = document.querySelectorAll('.emoji');
-
-    // Create confetti effect
-    function createConfetti() {
-      for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.animationDelay = Math.random() * 3 + 's';
-        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        document.body.appendChild(confetti);
-        
-        // Remove after animation
-        setTimeout(() => {
-          confetti.remove();
-        }, 5000);
-      }
-    }
 
     // Gift box click handler
     giftBox.addEventListener('click', async function() {
       if (!isStarted) {
+        // Get user's name
         const { value: name } = await Swal.fire({
           title: "What's your beautiful name? 💕",
           input: "text",
@@ -454,11 +399,15 @@
         });
 
         if (name) {
+          // Try to play background music
+          try {
+            await audio.play();
+          } catch(e) {
+            console.log("Audio playback failed:", e);
+          }
+
           // Update title with name
           mainTitle.textContent = `Happy Birthday, ${name.trim()}! 🎉`;
-          
-          // Create confetti effect
-          createConfetti();
           
           // Hide gift box and show main content with animation
           giftContainer.style.cssText = "transition:all .8s ease;transform:scale(10);opacity:0";
@@ -481,13 +430,15 @@
       }
     });
 
-    // Message box click handler
+    // Message box click handler (for mobile users)
     messageBox.addEventListener('click', function(e) {
+      // Don't trigger if clicking on emoji or button
       if (e.target.classList.contains('emoji') || e.target.classList.contains('next-button')) return;
       
       if (isStarted && currentLevel < messages.length - 1) {
         handleNextLevel();
       } else if (currentLevel >= messages.length - 1) {
+        // Final redirect
         redirectToFinalPage();
       }
     });
@@ -498,6 +449,7 @@
       if (isStarted && currentLevel < messages.length - 1) {
         handleNextLevel();
       } else if (currentLevel >= messages.length - 1) {
+        // Final redirect
         redirectToFinalPage();
       }
     });
@@ -507,23 +459,16 @@
       emoji.addEventListener('click', function(e) {
         e.stopPropagation();
         if (isStarted && index === currentLevel) {
-          // Update character display
-          characterDisplay.textContent = levelEmojis[index];
-          characterDisplay.classList.add('animate');
-          
-          // Create small confetti burst
-          createConfetti();
+          // Change character image to GIF
+          if (gifUrls[index]) {
+            characterImg.src = gifUrls[index];
+          }
           
           // Mark current emoji as completed
           emoji.classList.remove('active');
           emoji.classList.add('completed');
           
-          // Remove animation class after a while
-          setTimeout(() => {
-            characterDisplay.classList.remove('animate');
-          }, 3000);
-          
-          // Proceed to next level
+          // Small delay then proceed to next level
           setTimeout(() => {
             handleNextLevel();
           }, 1000);
@@ -542,12 +487,10 @@
         emojis[currentLevel].classList.remove('active');
         emojis[currentLevel].classList.add('completed');
         
-        // Update character display
-        characterDisplay.textContent = levelEmojis[currentLevel];
-        characterDisplay.classList.add('animate');
-        setTimeout(() => {
-          characterDisplay.classList.remove('animate');
-        }, 3000);
+        // Change to GIF if available
+        if (gifUrls[currentLevel]) {
+          characterImg.src = gifUrls[currentLevel];
+        }
       }
 
       currentLevel++;
@@ -575,9 +518,6 @@
     }
 
     function redirectToFinalPage() {
-      // Final confetti burst
-      createConfetti();
-      
       Swal.fire({
         title: 'Final Surprise! 🎊',
         text: 'Get ready for something special...',
@@ -591,9 +531,17 @@
       });
     }
 
+    // Preload images for better performance
+    function preloadImages() {
+      gifUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    }
+
     // Initialize
     window.addEventListener('DOMContentLoaded', function() {
-      console.log('Birthday page loaded successfully! 🎉');
+      preloadImages();
     });
   </script>
 </body>
